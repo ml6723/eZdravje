@@ -12,7 +12,9 @@
   </style>
   <script src="knjiznice/js/jquery-2.2.3.min.js"></script>
   <script src="knjiznice/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script src="knjiznice/js/koda.js"></script>
+  
 </head>
 <body>
 
@@ -42,35 +44,18 @@
   <!-- ZAČETEK: Vsebina aplikacije -->
   <div class="container">
     <div class="row">
-      <div class="col-lg-12 col-md-12 text-left">
-        <div class="col-lg-6 col-md-6 col-sm-6
-        
-        ">
+			<div class="col-lg-12 col-md-12 col-sm-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<div class="row">
-							<div class="col-lg-8 col-md-8 col-sm-8"><b>Kreiraj EHR zapis</b> za novega bolnika</div>
-							<div class="col-lg-4 col-md-4 col-sm-4"><select class="form-control input-sm" id="preberiPredlogoBolnika"><option value=""></option><option value="Pujsa,Pepa,1938-10-30T14:58">Pujsa Pepa</option></select></div>
+							<div class="col-lg-8 col-md-8 col-sm-8"><b>Preberi EHR zapis za bodočo mamico</b></div>
 						</div>
 					</div>
 					<div class="panel-body">
-						<span class="label label-default">Ime</span><input id="kreirajIme" type="text" class="form-control input-mini" placeholder="Osama">
-						<span class="label label-default">Priimek</span><input id="kreirajPriimek" type="text" class="form-control" placeholder="Bin Laden">
-						<span class="label label-default">Datum rojstva</span><input id="kreirajDatumRojstva" type="text" class="form-control" placeholder="1957-03-10T09:08">
-						<button type="button" class="btn btn-primary btn-xs" onclick="kreirajEHRzaBolnika()">Dodaj osnovne podatke o bolniku</button><span id="kreirajSporocilo"></span>
-				  	</div>
-				</div>
-			</div>
-			<div class="col-lg-6 col-md-6 col-sm-6">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<div class="row">
-							<div class="col-lg-8 col-md-8 col-sm-8"><b>Preberi EHR zapis</b> obstoječega bolnika</div>
-							<div class="col-lg-4 col-md-4 col-sm-4"><select class="form-control input-sm" id="preberiObstojeciEHR"><option value=""></option><option value="254f791d-2e7c-49d9-b646-376f62d6ead5">Dejan Lavbič</option><option value="d564c6a3-5a43-4fcc-bfa7-9ac76e9673bd">Pujsa Pepa</option><option value="b931580f-2b05-488b-985b-8d9ffb08ad02">Ata Smrk</option></select></div>
-						</div>
-					</div>
-					<div class="panel-body">
-						<span class="label label-default">EHR ID</span><input id="preberiEHRid" type="text" class="form-control input-mini" placeholder="7b661e12-3a98-21ad-c29e-2dc9f5a3d885">
+					  
+						  <div class="col-lg-4 col-md-4 col-sm-4"><span class="label label-default">EHR ID</span><input id="preberiEHRid" type="text" class="form-control input-mini" placeholder="7b661e12-3a98-21ad-c29e-2dc9f5a3d885">
+						  <p id="podatkiONosecki"></p>
+						
 						<button type="button" class="btn btn-primary btn-xs" onclick="preberiEHRodBolnika()">Preberi osnovne podatke o bolniku</button><span id="preberiSporocilo"></span>
 				  	</div>
 				</div>
@@ -82,18 +67,26 @@
   				<div class="panel panel-default">
   					<div class="panel-heading">
   						<div class="row">
-  							<div class="col-lg-8 col-md-8 col-sm-8"><b>Vnos</b> meritve <b>vitalnih znakov</b> bolnika</div>
+  							<div class="col-lg-8 col-md-8 col-sm-8"><b>Vnos tvoje nove meritve</b></div>
   							<div class="col-lg-4 col-md-4 col-sm-4"><select class="form-control input-sm" id="preberiObstojeciVitalniZnak"><option value=""></option><option value="b931580f-2b05-488b-985b-8d9ffb08ad02|2014-11-21T11:40Z|185|80.0|36.50|118|92|98|medicinska sestra Smrketa">Ata Smrk</option></select></div>
   						</div>
   					</div>
   					<div class="panel-body">
+  					  <span class="label label-default">Datum meritve</span><div class="input-group"><input id="dodajVitalnoDatum" type="text" class="form-control input-mini" placeholder="2016-06-01T21:41:14.255+02:00"><span class="input-group-addon">cm</span></div>
   					  <span class="label label-default">Telesna višina</span><div class="input-group"><input id="dodajVitalnoTelesnaVisina" type="text" class="form-control input-mini" placeholder="168"><span class="input-group-addon">cm</span></div>
   						<span class="label label-default">Telesna teža</span><div class="input-group"><input id="dodajVitalnoTelesnaTeza" type="text" class="form-control input-mini" placeholder="60.00"><span class="input-group-addon">kg</span></div>
   						<span class="label label-default">Sistolični krvni tlak</span><div class="input-group"><input id="dodajVitalnoKrvniTlakSistolicni" type="text" class="form-control input-mini" placeholder="112"><span class="input-group-addon">mm Hg</span></div>
   						<span class="label label-default">Diastolični krvni tlak</span><div class="input-group"><input id="dodajVitalnoKrvniTlakDiastolicni" type="text" class="form-control input-mini" placeholder="90"><span class="input-group-addon">mm Hg</span></div>
-              <div class="panel-body">
-                <div class="col-lg-5 col-md-5 col-sm-5"><select class="form-control" id="izberiTromesecje"><option value="Izberi tromesečje">Izberi tromesečje</option><option value="3. tromesečje">3. tromesečje</option>
-                  <option value="2. tromesečje">2. tromesečje</option><option value="1. tromesečje">1. tromesečje</option><option value="Pred nosečnostjo">Pred nosečnostjo</option></select></div>
+              <div class="panel-body"> 
+                <div class="row">
+                  <span class="label label-default">Tromesečje</span>
+                </div>
+                <div class="row">
+                  <label class="radio-inline"><input type="radio" name="izberiTromesecje" id="predNosecnostjo" value="Pred nosečnostjo"> Pred nosečnostjo</label>
+                  <label class="radio-inline"><input type="radio" name="izberiTromesecje" id="1tromesecje" value="1. tromesečje"> 1. tromesečje</label>
+                  <label class="radio-inline"><input type="radio" name="izberiTromesecje" id="2tromesecje" value="2. tromesečje"> 2. tromesečje</label>
+                  <label class="radio-inline"><input type="radio" name="izberiTromesecje" id="3tromesecje" value="3. tromesečje"> 3. tromesečje</label>
+                </div>
               </div>
   						<button type="button" class="btn btn-primary btn-xs" onclick="dodajMeritveVitalnihZnakov()">Dodaj meritve vitalnih znakov</button><span id="dodajMeritveVitalnihZnakovSporocilo"></span>
   				  	</div>
@@ -103,16 +96,21 @@
   				<div class="panel panel-default">
   					<div class="panel-heading">
   						<div class="row">
-  							<div class="col-lg-6 col-md-6 col-sm-6"><b>Pregled</b> meritev <b>vitalnih znakov</b> bolnika</div>
-  							<div class="col-lg-3 col-md-3 col-sm-3"><select class="form-control input-sm" id="preberiTipZaVitalneZnake"><option value="telesna temperatura">telesna temperatura</option><option value="telesna temperatura AQL">telesna temperatura (filter na podhladitev)</option><option value="telesna teža">telesna teža</option></select></div>
-  							<div class="col-lg-3 col-md-3 col-sm-3"><select class="form-control input-sm" id="preberiEhrIdZaVitalneZnake"><option value=""></option><option value="b931580f-2b05-488b-985b-8d9ffb08ad02">Ata Smrk</option><option value="d564c6a3-5a43-4fcc-bfa7-9ac76e9673bd">Pujsa Pepa</option></select></div>
+  							<div class="col-lg-6 col-md-6 col-sm-6"><b>Grafčni prikaz tvojih meritev</b></div>
   						</div>
   					</div>
   					<div class="panel-body">
-  						<span class="label label-default">EHR ID</span><input id="meritveVitalnihZnakovEHRid" type="text" class="form-control input-mini" placeholder="7b661e12-3a98-21ad-c29e-2dc9f5a3d885">
-  						<button type="button" class="btn btn-primary btn-xs" onclick="preberiMeritveVitalnihZnakov()">Preberi meritve vitalnih znakov</button><span id="preberiMeritveVitalnihZnakovSporocilo"></span>
-  						<div id="rezultatMeritveVitalnihZnakov"></div>
-  				  	</div>
+  						<div id="grafTeze"></div>
+  						<div id="grafPritiska"></div>
+  				  </div>
+  				</div>
+  			</div>
+  			
+  			<div class="col-lg-6 col-md-6 col-sm-6">
+  				<div class="panel panel-default">
+  				  <div class="panel-body">
+  				    <div id="googleMap" style="width:500px;height:380px;"></div>
+  				  </div>
   				</div>
   			</div>
   		</div>
