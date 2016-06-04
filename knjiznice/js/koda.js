@@ -5,10 +5,12 @@ var queryUrl = baseUrl + '/query';
 var username = "ois.seminar";
 var password = "ois4fri";
 
+var isci;
+
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(function() {
-    drawChart([], [], [], "teze");
-    drawChart([], [], [], "pritisk");
+    drawChart([], [], [], [], "teze");
+    drawChart([], [], [], [], "pritisk");
 });
 
 
@@ -244,11 +246,22 @@ function preberiEHRodBolnika() {
 	    	success: function (data) {
 				var party = data.party;
 				
-				var datumRojstva = party.dateOfBirth.split("T");
+				if(party.dateOfBirth == undefined) {
+				    var datumRojstva = "Ni podatka"
+				} else {
+				    var razclenjenDatum = party.dateOfBirth.split("T");
+				    var datumRojstva = razclenjenDatum[0];
+				}
+				
+				if(party.address == undefined) {
+				    var kraj = "Ni podatka";
+				} else {
+				    var kraj = party.address.address;
+				}
 				
 				$("#podatkiONosecki").html("<p class='text-left'>Ime in priimek: " + party.firstNames + " " + party.lastNames + "</p>" +
-				"<p class='text-left'>Datum rojstva: " + datumRojstva[0] + "</p>" +
-				"<p class='text-left'>Kraj bivanja: " + party.address.address + "</p>");
+				"<p class='text-left'>Datum rojstva: " + datumRojstva + "</p>" +
+				"<p class='text-left'>Kraj bivanja: " + kraj + "</p>");
 				
 				var AQL =
 				    "select " +
@@ -315,10 +328,10 @@ function narisiGrafa(ehrId, AQL) {
 	            datumi[i] = brezUre[0];
 	        }
 	        
-	        console.log(diastolicniTlaki);
+	        //console.log(diastolicniTlaki);
 	        
-	        drawChart(datumi, teze, tromesecja, "teze");
-	        drawChart(datumi, sistolicniTlaki, diastolicniTlaki, "pritisk");
+	        drawChart(datumi, teze, tromesecja, [], "teze");
+	        drawChart(datumi, sistolicniTlaki, diastolicniTlaki, tromesecja, "pritisk");
 	        
 	        
         }
@@ -327,27 +340,35 @@ function narisiGrafa(ehrId, AQL) {
 
 
 
-function drawChart(tabela1, tabela2, tabela3, kateriGraf) {
+function drawChart(tabela1, tabela2, tabela3, tabela4, kateriGraf) {
     
     //console.log(datumi);
     if(kateriGraf == "teze") {
         var dataTable = new google.visualization.DataTable();
         var datumi = tabela1;
         var teze = tabela2;
+        var tromesecja = tabela3;
         
         dataTable.addColumn('string', 'Datum');
         dataTable.addColumn('number', "Teža");
+        dataTable.addColumn({type: 'string', role: 'tooltip'});
         
         if(teze.length > 0) {
             for(var j=0; j<teze.length; j++) {
-                var tab = new Array(2);
+                var tab = new Array(3);
+                if(j == 0) {
+                    var detail = tromesecja[j] + "\nDatum: " + datumi[j] + "\nTeža: " + teze[j] + " kg";
+                } else {
+                    var detail = tromesecja[j] + "\nDatum: " + datumi[j] + "\nTeža: " + teze[j] + " kg" + "\nSprememba teže (od začetka nosečnosti): " + (teze[j] - teze[0]).toFixed(2) + " kg";
+                }
                 tab[0] = datumi[j];
                 tab[1] = teze[j];
+                tab[2] = detail;
                 
                 dataTable.addRow(tab);
             }
         } else {
-            dataTable.addRows([['Ni podatkov za prikaz', { role: 'annotation' }],]);
+             dataTable.addRows([['Ni podatkov za prikaz', { role: 'annotation' }, { role: 'annotation' }],]);
         }
     
         var options = {
@@ -362,22 +383,27 @@ function drawChart(tabela1, tabela2, tabela3, kateriGraf) {
         var datumi = tabela1;
         var sistolicniTlaki = tabela2;
         var diastolicniTlaki = tabela3;
+        var tromesecja = tabela4;
         
         dataTable.addColumn('string', 'Datum');
         dataTable.addColumn('number', "Sistolični tlak");
+        dataTable.addColumn({type: 'string', role: 'tooltip'});
         dataTable.addColumn('number', "Diastolični tlak");
+        dataTable.addColumn({type: 'string', role: 'tooltip'});
         
         if(datumi.length > 0) {
             for(var j=0; j<datumi.length; j++) {
-                var tab = new Array(3);
+                var tab = new Array(5);
                 tab[0] = datumi[j];
                 tab[1] = sistolicniTlaki[j];
-                tab[2] = diastolicniTlaki[j];
+                tab[2] = tromesecja[j] + "\nDatum: " + datumi[j] + "\nSistolični pritisk: " + sistolicniTlaki[j] + "\nDiastolični pritisk: " + diastolicniTlaki[j];
+                tab[3] = diastolicniTlaki[j];
+                tab[4] = tromesecja[j] + "\nDatum: " + datumi[j] + "\nSistolični pritisk: " + sistolicniTlaki[j] + "\nDiastolični pritisk: " + diastolicniTlaki[j];
                 
                 dataTable.addRow(tab);
             }
         } else {
-            dataTable.addRows([['Ni podatkov za prikaz', { role: 'annotation' }, { role: 'annotation' }],]);
+            dataTable.addRows([['Ni podatkov za prikaz', { role: 'annotation' }, { role: 'annotation' }, { role: 'annotation' }, { role: 'annotation' }],]);
         }
         
         var options = {
@@ -390,25 +416,105 @@ function drawChart(tabela1, tabela2, tabela3, kateriGraf) {
     chart.draw(dataTable, options);
 }
 
+google.maps.event.addDomListener(window, 'load', function() {
+    initialize("Ljubljana");
+});
 
-/*function initialize() {
-    /*var city;
+function initialize(mesto) {
+    if(mesto == undefined) {
+        var kraj = "Ljubljana";
+    } else {
+        var kraj = mesto;
+    }
+ //   var sirina, dolzina;
+    
     var geocoder = new google.maps.Geocoder();
     
-    geocoder.geocode( {'address' : city}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-            map.setCenter(results[0].geometry.location);
-        }
-    });
+    geocoder.geocode( {'address' : kraj}, geocodeCallback);
+ /*   
+    console.log(sirina + " in " + dolzina);
+    
+    var city = new google.maps.LatLng(sirina, dolzina);
     
     var mapProp = {
       center:new google.maps.LatLng(51.508742, -0.120850),
-      zoom: 7,
+      zoom: 15,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     
-    var map = new google.maps.Map($("#googleMap"), mapProp);
-}*/
+    var map = new google.maps.Map($("#googleMap")[0], mapProp);
+    
+    var request = {
+        location: city,
+        radius: 200,
+        types: ['hospital', 'health'] // this is where you set the map to get the hospitals and health related places
+    };
+    
+    infowindow = new google.maps.InfoWindow();
+    var service = new google.maps.places.PlacesService(map);
+    service.nearbySearch(request, callback);
+    */
+    
+}
+
+var map;// = new google.maps.Map($("#googleMap")[0], mapProp);
+var infowindow = new google.maps.InfoWindow();
+
+function geocodeCallback(results, status) {
+    console.log(" status " + status);
+    if (status != google.maps.GeocoderStatus.OK) {
+    console.log(" statusq " + status);
+        return;
+    }
+    //if (status == google.maps.GeocoderStatus.OK) {
+        //map.setCenter(results[0].geometry.location);
+     var   sirina = results[0].geometry.location.lat();
+     var   dolzina = results[0].geometry.location.lng();
+   //}
+    
+    console.log(sirina + " in " + dolzina);
+    var city = new google.maps.LatLng(sirina, dolzina);
+    
+    var mapProp = {
+      center: city,
+      zoom: 15,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    
+    map = new google.maps.Map($("#googleMap")[0], mapProp);
+    
+    var request = {
+        location: city,
+        radius: 2000,
+        types: ['hospital'] // this is where you set the map to get the hospitals and health related places
+    };
+    
+    var service = new google.maps.places.PlacesService(map);
+    service.nearbySearch(request, callback);
+}
+
+function callback(results, status) {
+  if (status == google.maps.places.PlacesServiceStatus.OK) {
+    for (var i = 0; i < results.length; i++) {
+      createMarker(results[i]);
+    }
+  }
+}
+
+function createMarker(place) {
+  var placeLoc = place.geometry.location;
+  var marker = new google.maps.Marker({
+    map: map,
+    position: place.geometry.location
+  });
+
+  google.maps.event.addListener(marker, 'click', function() {
+    infowindow.setContent(place.name);
+    infowindow.open(map, this);
+  });
+}
+
+
 
 
 $(document).ready(function() {
