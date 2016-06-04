@@ -5,7 +5,7 @@ var queryUrl = baseUrl + '/query';
 var username = "ois.seminar";
 var password = "ois4fri";
 
-var isci;
+var isci = ["krneki"];
 
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(function() {
@@ -45,11 +45,11 @@ function generirajPodatke(stPacienta) {
   if(stPacienta == 1) {
       var ime = "Sneguljčica";
       var priimek = "BelaKotSneg";
-      var datumRojstva = "1854-03-12T00:00:00.000Z";
-      var naslov = "Bled";
+      var datumRojstva = "1854-03-12";
+      var naslov = "Ljubljana";
       
       var meritve = {
-        datumMeritve: ["2015-10-11T21:41:14.255+02:00", "2015-12-06T21:41:14.255+02:00", "2016-01-31T21:41:14.255+02:00", "2016-04-15T21:41:14.255+02:00"],
+        datumMeritve: ["2015-10-11", "2015-12-06", "2016-01-31", "2016-04-15"],
         visina: [167, 167, 167, 167],
         teza: [57.00, 57.20, 58.50, 61.50],
         tromesecje: ["Pred nosečnostjo", "1. tromesečje", "1. tromesečje", "2. tromesečje"],
@@ -59,26 +59,26 @@ function generirajPodatke(stPacienta) {
   } else if(stPacienta == 2) {
       var ime = "Pepelka";
       var priimek = "Pepelnata";
-      var datumRojstva = "1697-06-08T00:00:00.000Z";
-      var naslov = "Ljubljana";
+      var datumRojstva = "1697-06-08";
+      var naslov = "Bled";
       
       var meritve = {
-        datumMeritve: ["2015-08-11T21:41:14.255+02:00", "2015-10-06T21:41:14.255+02:00", "2015-11-20T21:41:14.255+02:00", "2016-01-15T21:41:14.255+02:00",
-            "2016-03-17T21:41:14.255+02:00", "2016-05-05T21:41:14.255+02:00"],
+        datumMeritve: ["2015-08-11", "2015-10-06", "2015-12-20", "2016-02-15",
+            "2016-03-17", "2016-05-05"],
         visina: [165, 165, 165, 165, 165, 165],
         teza: [55.00, 55.00, 56.70, 61.50, 63.80, 65.30],
         tromesecje: ["Pred nosečnostjo", "1. tromesečje", "1. tromesečje", "2. tromesečje", "2. tromesečje", "3. tromesečje"],
-        sistolicniTlak: [95, 98, 96, 100, 96, 115], //rahlo povisan
+        sistolicniTlak: [95, 98, 96, 100, 96, 116], //rahlo povisan
         diastolicniTlak: [63, 65, 63, 69, 68, 80]
       }
   } else if(stPacienta == 3) {
       var ime = "Aurora";
       var priimek = "Zaspana";
-      var datumRojstva = "1697-10-21T00:00:00.000Z";
+      var datumRojstva = "1697-10-21";
       var naslov = "Maribor";
       
       var meritve = {
-        datumMeritve: ["2016-01-31T21:41:14.255+02:00", "2016-03-15T21:41:14.255+02:00", "2016-04-05T21:41:14.255+02:00"],
+        datumMeritve: ["2016-01-31", "2016-03-15", "2016-04-05"],
         visina: [163, 163, 163],
         teza: [50.30, 50.60, 51.60],
         tromesecje: ["Pred nosečnostjo", "1. tromesečje", "1. tromesečje"],
@@ -114,8 +114,14 @@ function generirajPodatke(stPacienta) {
 		                if (party.action == 'CREATE') {
 		                    $("#kreirajSporocilo").html("<span class='obvestilo " +
                           "label label-success fade-in'>Uspešno kreiran EHR '" +
-                          ehrId + "'.</span>");
+                          ehrId + "' je dodan na konec seznama.</span>");
 		                    $("#preberiEHRid").val(ehrId);
+		                    var element = $("#preberiObstojeciEHR");
+		                    var option = document.createElement('option');
+		                    var text = partyData.firstNames + " " + partyData.lastNames;
+		                    option.value = ehrId;
+		                    option.textContent = text;
+		                    element.append(option);
 		                }
 		                
 		                for(var i=0; i<meritve.visina.length; i++) {
@@ -139,7 +145,10 @@ function dodajMeritveVitalnihZnakov() {
     sessionId = getSessionId();
     $("#dodajMeritveVitalnihZnakovSporocilo").html("");
     
-    var ehrId = $("#preberiObstojeciEHR").val();
+    var ehrId = $("#preberiEHRid").val();
+    
+    console.log("Ehr za dodajanje: " + ehrId);
+    
     var izbranoTromesecje = $("input[name='izberiTromesecje']:checked").val();
     
     var datum = $("#dodajVitalnoDatum").val();
@@ -170,6 +179,7 @@ function dodajMeritveVitalnihZnakov() {
             }
             
             dodajMeritve(ehrId, meritve, -1);
+            
         }
     }
     
@@ -224,6 +234,8 @@ function dodajMeritve(ehrId, meritve, index) {
                 		    data: JSON.stringify(podatki),
                 		    async: false
                 		});
+                		
+        preberiEHRodBolnika();
 		
 		console.log(poizvedba.responseText);
 		
@@ -279,7 +291,7 @@ function preberiEHRodBolnika() {
                     "offset 0 limit 100 ";
 				
 				//console.log(AQL);
-				narisiGrafa(ehrId, AQL);
+				narisiGrafa(ehrId, AQL, kraj);
 				
 				/*$("#preberiSporocilo").html("<span class='obvestilo label " +
                 "label-success fade-in'>Bolnik '" + party.firstNames + " " +
@@ -295,7 +307,11 @@ function preberiEHRodBolnika() {
 	}
 }
 
-function narisiGrafa(ehrId, AQL) {
+function narisiGrafa(ehrId, AQL, kraj) {
+    if(kraj == "Ni podatka") {
+        kraj = undefined;
+    }
+    
     $.ajax({
 	    url: baseUrl + "/query?" + $.param({"aql": AQL}),
 	    type: 'GET',
@@ -320,18 +336,31 @@ function narisiGrafa(ehrId, AQL) {
 	            sistolicniTlaki[i] = podatki[i].systolic;
 	            diastolicniTlaki[i] = podatki[i].diastolic;
 	            
+	            if(i == podatki.length-1) {
+	                if((sistolicniTlaki[i] - sistolicniTlaki[0]) >= 30) {
+	                    isci = ["hospital"];
+	                } else if((sistolicniTlaki[i] - sistolicniTlaki[0]) >= 20) {
+	                    isci = ["park"];
+	                } else {
+	                    isci = ["spa"];
+	                }
+	            }
+	            
 	            var datum = podatki[i].time;
 	            
 	            //console.log(datum.value);
 	            var brezUre = datum.split("T");
 	            
 	            datumi[i] = brezUre[0];
+	            
+	            
 	        }
 	        
-	        //console.log(diastolicniTlaki);
+	        console.log(diastolicniTlaki);
 	        
 	        drawChart(datumi, teze, tromesecja, [], "teze");
 	        drawChart(datumi, sistolicniTlaki, diastolicniTlaki, tromesecja, "pritisk");
+	        initialize(kraj);
 	        
 	        
         }
@@ -417,7 +446,7 @@ function drawChart(tabela1, tabela2, tabela3, tabela4, kateriGraf) {
 }
 
 google.maps.event.addDomListener(window, 'load', function() {
-    initialize("Ljubljana");
+    initialize(undefined);
 });
 
 function initialize(mesto) {
@@ -477,7 +506,7 @@ function geocodeCallback(results, status) {
     
     var mapProp = {
       center: city,
-      zoom: 15,
+      zoom: 13,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     
@@ -485,8 +514,8 @@ function geocodeCallback(results, status) {
     
     var request = {
         location: city,
-        radius: 2000,
-        types: ['hospital'] // this is where you set the map to get the hospitals and health related places
+        radius: 5000,
+        types: isci // this is where you set the map to get the hospitals and health related places
     };
     
     var service = new google.maps.places.PlacesService(map);
@@ -520,8 +549,15 @@ function createMarker(place) {
 $(document).ready(function() {
     
     $("#generiraj").click(function() {
+        $("#kreirajSporocilo").html("");
         generirajPodatke(1);
+        generirajPodatke(2);
+        generirajPodatke(3);
     });
+    
+    $("#dodajMeritveVitZnakov").click(function() {
+        preberiEHRodBolnika();
+    })
     
     $("#preberiObstojeciEHR").on('change',function(){
         var vrednost = $(this).val(); // vrednost 

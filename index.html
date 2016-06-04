@@ -50,30 +50,35 @@
 					<div class="panel-heading">
 						<div class="row">
 							<div class="col-lg-8 col-md-8 col-sm-8"><b>Preberi EHR zapis za bodočo mamico</b></div>
-							<div class="col-lg-4 col-md-4 col-sm-4"><select class="form-control input-sm" id="preberiObstojeciEHR"><option value=""></option><option value="2178eb27-6563-4cf4-b069-e49a51398798">Sneguljčica BelaKotSneg</option><option value="d564c6a3-5a43-4fcc-bfa7-9ac76e9673bd">Pujsa Pepa</option><option value="b931580f-2b05-488b-985b-8d9ffb08ad02">Ata Smrk</option></select></div>
+							<div class="col-lg-4 col-md-4 col-sm-4"><select class="form-control input-sm" id="preberiObstojeciEHR"><option value=""></option><option value="2178eb27-6563-4cf4-b069-e49a51398798">Sneguljčica BelaKotSneg</option></select></div>
 						</div>
 					</div>
 					<div class="panel-body">
-					  
-						  <div class="col-lg-4 col-md-4 col-sm-4"><span class="label label-default">EHR ID</span><input id="preberiEHRid" type="text" class="form-control input-mini" placeholder="7b661e12-3a98-21ad-c29e-2dc9f5a3d885">
-						  <p id="podatkiONosecki"></p>
-						
-						<button type="button" class="btn btn-primary btn-xs" onclick="preberiEHRodBolnika()">Preberi osnovne podatke o bolniku</button><span id="preberiSporocilo"></span>
-				  	</div>
+					  <div class = "row">
+  						<div class="col-lg-4 col-md-4 col-sm-4"><span class="label label-default">EHR ID</span><input id="preberiEHRid" type="text" class="form-control input-mini" placeholder="7b661e12-3a98-21ad-c29e-2dc9f5a3d885">
+    						<button type="button" class="btn btn-info btn-xs" onclick="preberiEHRodBolnika()">Preberi osnovne podatke o bolniku</button><span id="preberiSporocilo"></span>
+  				  	</div>
+  				  	  <div class = "col-lg-4 col-md-4 col-sm-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-2">
+      						<div class = "panel-body">
+        						<span id="kreirajSporocilo"></span>
+        						<p id="podatkiONosecki"></p>
+      						</div>
+  						  </div>
+  				  </div>
 				</div>
 			</div>
 		</div>
 		<div class="row">
 		  <div class="col-lg-12 col-md-12 text-left">
-  			<div class="col-lg-6 col-md-6 col-sm-6">
-  				<div class="panel panel-default">
+  			<div class="col-lg-4 col-md-4 col-sm-4">
+  				<div class="panel panel-default"style="height:500px;">
   					<div class="panel-heading">
   						<div class="row">
   							<div class="col-lg-8 col-md-8 col-sm-8"><b>Vnos tvoje nove meritve</b></div>
   						</div>
   					</div>
   					<div class="panel-body">
-  					  <span class="label label-default">Datum meritve</span><div class="input-group"><input id="dodajVitalnoDatum" type="text" class="form-control input-mini" placeholder="2016-06-01T21:41:14.255+02:00"><span class="input-group-addon">cm</span></div>
+  					  <span class="label label-default">Datum meritve</span><div class="input-group"><input id="dodajVitalnoDatum" type="text" class="form-control input-mini" placeholder="2016-05-17 (YYYY-MM-DD)"><span class="input-group-addon">cm</span></div>
   					  <span class="label label-default">Telesna višina</span><div class="input-group"><input id="dodajVitalnoTelesnaVisina" type="text" class="form-control input-mini" placeholder="168"><span class="input-group-addon">cm</span></div>
   						<span class="label label-default">Telesna teža</span><div class="input-group"><input id="dodajVitalnoTelesnaTeza" type="text" class="form-control input-mini" placeholder="60.00"><span class="input-group-addon">kg</span></div>
   						<span class="label label-default">Sistolični krvni tlak</span><div class="input-group"><input id="dodajVitalnoKrvniTlakSistolicni" type="text" class="form-control input-mini" placeholder="112"><span class="input-group-addon">mm Hg</span></div>
@@ -83,18 +88,27 @@
                   <span class="label label-default">Tromesečje</span>
                 </div>
                 <div class="row">
-                  <label class="radio-inline"><input type="radio" name="izberiTromesecje" id="predNosecnostjo" value="Pred nosečnostjo"> Pred nosečnostjo</label>
-                  <label class="radio-inline"><input type="radio" name="izberiTromesecje" id="1tromesecje" value="1. tromesečje"> 1. tromesečje</label>
-                  <label class="radio-inline"><input type="radio" name="izberiTromesecje" id="2tromesecje" value="2. tromesečje"> 2. tromesečje</label>
-                  <label class="radio-inline"><input type="radio" name="izberiTromesecje" id="3tromesecje" value="3. tromesečje"> 3. tromesečje</label>
+                  <div class = "panel-body">
+                    <div class="row">
+                      <label class="radio-inline"><input type="radio" name="izberiTromesecje" id="predNosecnostjo" value="Pred nosečnostjo"> Pred nosečnostjo</label>
+                    
+                    
+                      <label class="radio-inline"><input type="radio" name="izberiTromesecje" id="1tromesecje" value="1. tromesečje"> 1. tromesečje</label>
+                    </div>
+                    <div class="row">
+                      <label class="radio-inline"><input type="radio" name="izberiTromesecje" id="2tromesecje" value="2. tromesečje"> 2. tromesečje</label>
+                    
+                      <label class="radio-inline"><input type="radio" name="izberiTromesecje" id="3tromesecje" value="3. tromesečje"> 3. tromesečje</label>
+                    </div>
+                  </div>
                 </div>
               </div>
-  						<button type="button" class="btn btn-primary btn-xs" onclick="dodajMeritveVitalnihZnakov()">Dodaj meritve vitalnih znakov</button><span id="dodajMeritveVitalnihZnakovSporocilo"></span>
+  						<button type="button" class="btn btn-info btn-xs" id=dodaeritveVitZnakov onclick="dodajMeritveVitalnihZnakov()">Dodaj meritve vitalnih znakov</button><span id="dodajMeritveVitalnihZnakovSporocilo"></span>
   				  	</div>
   				</div>
   			</div>
-  			<div class="col-lg-6 col-md-6 col-sm-6">
-  				<div class="panel panel-default">
+  			<div class="col-lg-8 col-md-8 col-sm-8">
+  				<div class="panel panel-default"style="height:500px;">
   					<div class="panel-heading">
   						<div class="row">
   							<div class="col-lg-6 col-md-6 col-sm-6"><b>Grafčni prikaz tvojih meritev</b></div>
@@ -107,11 +121,19 @@
   				</div>
   			</div>
   			
-  			<div class="col-lg-6 col-md-6 col-sm-6">
-  				<div class="panel panel-default">
-  				  <div class="panel-body">
-  				    <div id="googleMap" style="width:500px;height:380px;"></div>
-  				  </div>
+  			<div class="col-lg-12 col-md-12 col-sm-12">
+  			  <div class="panel panel-default">
+  			    <div class="panel-body">
+  			      <div class="col-lg-6 col-md-6 col-sm-6">
+  			        
+  			      </div>
+  			      
+    			    <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-6 col-md-offset-6 col-sm-offset-6">
+      				  <div class="panel-body">
+      				    <div id="googleMap" style="width:500px;height:380px;"></div>
+      				  </div>
+      				</div>
+    				</div>
   				</div>
   			</div>
   		</div>
