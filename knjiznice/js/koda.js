@@ -562,6 +562,4 @@ $(document).ready(function() {
         $("#preberiEHRid").val(vrednost);
         
     });
-    
-    
 });
