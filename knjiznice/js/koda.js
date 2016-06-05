@@ -427,7 +427,9 @@ function drawChart(tabela1, tabela2, tabela3, tabela4, kateriGraf) {
         var options = {
           title: 'Tvoja teža skozi nosečnost',
           curveType: 'function',
-          legend: { position: 'bottom' }
+          legend: { position: 'bottom' },
+          pointSize: 13,
+          pointShape: { type: 'star', sides: 5, dent: 0.5 }
         };
         
         var chart = new google.visualization.LineChart($("#grafTeze")[0]);
@@ -462,7 +464,10 @@ function drawChart(tabela1, tabela2, tabela3, tabela4, kateriGraf) {
         var options = {
           title: 'Tvoj pritisk skozi nosečnost',
           curveType: 'function',
-          legend: { position: 'bottom' }
+          legend: { position: 'bottom' },
+          pointSize: 13,
+          pointShape: { type: 'star', sides: 5, dent: 0.5 },
+          colors: [ '#703593', '#ff1493' ]
         };
         var chart = new google.visualization.LineChart($("#grafPritiska")[0]);
     }
