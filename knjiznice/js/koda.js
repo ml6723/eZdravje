@@ -112,9 +112,6 @@ function generirajPodatke(stPacienta) {
 		            data: JSON.stringify(partyData),
 		            success: function (party) {
 		                if (party.action == 'CREATE') {
-		                   /*$("#kreirajSporocilo").html("<span class='obvestilo " +
-                          "label label-success fade-in'>Uspešno kreiran EHR '" +
-                          ehrId + "' je dodan na konec seznama.</span>");*/
                             
                             var el = $("#podatkiONosecki");
                             var opt = document.createElement('p');
@@ -190,8 +187,6 @@ function dodajMeritveVitalnihZnakov() {
             
         }
     }
-    
-    console.log(ehrId);
 }
 
 function dodajMeritve(ehrId, meritve, index) {
@@ -263,16 +258,6 @@ function dodajMeritve(ehrId, meritve, index) {
                     		    async: false
             });
 		}
-
-		//console.log(meritve.teza[index]);
-		
-		
-                		
-        //preberiEHR();
-		
-		console.log(poizvedba.responseText);
-		
-		
 }
 
 function preberiEHR() {
@@ -326,13 +311,8 @@ function preberiEHR() {
                     "order by a_b/data[at0002]/events[at0003]/time/value asc " +
                     "offset 0 limit 12 ";
 				
-				//console.log(AQL);
 				narisiGrafa(ehrId, AQL, kraj);
 				
-				/*$("#preberiSporocilo").html("<span class='obvestilo label " +
-                "label-success fade-in'>Bolnik '" + party.firstNames + " " +
-                party.lastNames + "', ki se je rodil '" + party.dateOfBirth +
-                "'.</span>");*/
 			},
 			error: function(err) {
 				$("#preberiSporocilo").html("<span class='obvestilo label " +
@@ -353,8 +333,6 @@ function narisiGrafa(ehrId, AQL, kraj) {
 	    type: 'GET',
 	    headers: {"Ehr-Session": sessionId},
 	    success: function (poizvedba) {
-	        
-	        //console.log(poizvedba.resultSet);
 	        
 	        if(poizvedba) {
 	            var podatki = poizvedba.resultSet;
@@ -402,21 +380,13 @@ function narisiGrafa(ehrId, AQL, kraj) {
 	            
 	            var datum = podatki[i].time;
 	            
-	            //console.log(datum.value);
 	            var brezUre = datum.split("T");
 	            
 	            datumi[i] = brezUre[0];
-	            
-	            
 	        }
-	        
-	        console.log(diastolicniTlaki);
-	        
 	        drawChart(datumi, teze, tromesecja, [], "teze");
 	        drawChart(datumi, sistolicniTlaki, diastolicniTlaki, tromesecja, "pritisk");
 	        initialize(kraj);
-	        
-	        
         }
     });
 }
@@ -425,7 +395,6 @@ function narisiGrafa(ehrId, AQL, kraj) {
 
 function drawChart(tabela1, tabela2, tabela3, tabela4, kateriGraf) {
     
-    //console.log(datumi);
     if(kateriGraf == "teze") {
         var dataTable = new google.visualization.DataTable();
         var datumi = tabela1;
@@ -435,8 +404,6 @@ function drawChart(tabela1, tabela2, tabela3, tabela4, kateriGraf) {
         dataTable.addColumn('string', 'Datum');
         dataTable.addColumn('number', "Teža");
         dataTable.addColumn({type: 'string', role: 'tooltip'});
-        
-        console.log(datumi);
         
         if(teze.length > 0) {
             for(var j=0; j<teze.length; j++) {
@@ -449,7 +416,6 @@ function drawChart(tabela1, tabela2, tabela3, tabela4, kateriGraf) {
                 tab[0] = datumi[j];
                 tab[1] = teze[j];
                 tab[2] = detail;
-                
                 
                 dataTable.addRow(tab);
             }
@@ -472,8 +438,6 @@ function drawChart(tabela1, tabela2, tabela3, tabela4, kateriGraf) {
         var diastolicniTlaki = tabela3;
         var tromesecja = tabela4;
         
-        console.log(datumi);
-        
         dataTable.addColumn('string', 'Datum');
         dataTable.addColumn('number', "Sistolični tlak");
         dataTable.addColumn({type: 'string', role: 'tooltip'});
@@ -483,22 +447,17 @@ function drawChart(tabela1, tabela2, tabela3, tabela4, kateriGraf) {
         if(datumi.length > 0) {
             for(var j=0; j<datumi.length; j++) {
                 var tab = new Array(5);
-                //sistolicniTlaki[j] = sistolicniTlaki[j].toFixed(2);
-                //diastolicniTlaki[j] = diastolicniTlaki[j].toFixed(2);
                 tab[0] = datumi[j];
                 tab[1] = sistolicniTlaki[j];
                 tab[2] = tromesecja[j] + "\nDatum: " + datumi[j] + "\nSistolični pritisk: " + sistolicniTlaki[j].toFixed(0) + "\nDiastolični pritisk: " + diastolicniTlaki[j].toFixed(0);
                 tab[3] = diastolicniTlaki[j];
                 tab[4] = tromesecja[j] + "\nDatum: " + datumi[j] + "\nSistolični pritisk: " + sistolicniTlaki[j] + "\nDiastolični pritisk: " + diastolicniTlaki[j];
                 
-                
-                
                 dataTable.addRow(tab);
             }
         } else {
             dataTable.addRows([['Ni podatkov za prikaz', { role: 'annotation' }, { role: 'annotation' }, { role: 'annotation' }, { role: 'annotation' }],]);
         }
-        
         
         var options = {
           title: 'Tvoj pritisk skozi nosečnost',
@@ -602,11 +561,7 @@ $(document).ready(function() {
         var vrednost = $(this).val(); // vrednost 
         $("#preberiEHRid").val(vrednost);
         
-        //google.maps.event.addDomListener(window, 'load', initialize);
     });
     
     
 });
-
-
-// TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
