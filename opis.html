@@ -5,7 +5,7 @@
   <title>eZdravje :: 4. DN :: OIS 2015/2016</title>
   <link href="knjiznice/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {padding-top: 70px;}
+    body {padding-top: 70px; background-color: #fff0f5}
   </style>
   <script src="knjiznice/js/jquery-2.2.3.min.js"></script>
   <script src="knjiznice/js/bootstrap.min.js"></script>
@@ -14,7 +14,7 @@
 <body>
 
   <!-- ZAČETEK: Menujska vrstica na vrhu spletne strani -->
-  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="background-color:#fff0f5; border-color:#eee8dc;">
     <div class="container">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menujska-vrstica">
@@ -22,7 +22,7 @@
           <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
         </button>
         <!-- ZAČETEK: Ime vaše aplikacije -->
-        <a class="navbar-brand" href="index.html">{ime vaše aplikacije}</a>
+        <a class="navbar-brand" href="index.html">eNosečka</a>
         <!-- KONEC: Ime vaše aplikacije -->
       </div>
       <div class="collapse navbar-collapse" id="menujska-vrstica">
@@ -45,7 +45,9 @@
           </div>
           <div class="panel-body">
             <!-- ZAČETEK: Opis ideje, ki jo aplikacija podpira -->
-            <p><strong>TO-DO</strong>: Na tem mestu je potrebno dodati <strong>osnovni opis ideje rešitve</strong> (kakšen je osnovni SCENARIJ UPORABE, KDO je ciljna publika, za kakšen NAMEN se aplikacija uporablja).</p><p class="text-muted">Opis naj ne bo daljši od 200 besed.</p>
+            <p>Ciljna publika aplikacije so <b>nosečnice</b>, kot pove že njeno ime <b>eNosečka</b>.</p>
+            <p>Namenjena je spremljanju teže in krvnega pritiska skozi nosečnost.</p>
+            <p>Ob različnih stopnjah povišanega krvnega pritiska (razlika med zadnjo meritvijo in njenim pritiskom pred nosečnostjo), se nosečnici izpiše priporočilo (npr. sprostitev, takojšnji obiska zdravnika) v obliki sporočila in zemljevida.</p>
             <!-- KONEC: Opis ideje, ki jo aplikacija podpira -->
           </div>
         </div>
@@ -55,7 +57,8 @@
           </div>
           <div class="panel-body">
             <!-- ZAČETEK: Uporabljeni zunanji viri podatkov -->
-            <p><strong>TO-DO</strong>: Na tem mestu je navesti zunanji vir podatkov (URL naslov), na kakšen način ste ga uporabili (neposredni API klic, uvožena statična datoteka ipd.) in kaj je bil namen uporabe (kako se vključuje v osnovno idejo aplikacije).</p>
+            <p>Vključen zunanji vir podatkov je <a href="https://developers.google.com/maps/">Google Maps</a>, do katerega sem dostopala z neposrednim API klicem.</p>
+            <p>Namenjen je kot del priporočila nosečnici, saj ji na zemljevidu označi okoliške zdravsvene ustanove, parke, wellness-e, glede na njen kraj bivanja in obdelavo njenih meritev.</p>
             <!-- KONEC: Uporabljeni zunanji viri podatkov -->
           </div>
         </div>
@@ -65,7 +68,10 @@
           </div>
           <div class="panel-body">
             <!-- ZAČETEK: Master/detail načrtovalski vzorec -->
-            <p><strong>TO-DO</strong>: Na tem mestu morate navesti uporabljen master/detail načrtovalski vzorec in na kakšen način ga nameravate uporabiti.</p>
+            <p><img src="https://s33.postimg.org/m6yv7z0fz/Master_detail_tooltip.jpg" style="height:266px; width:924px;"></p>
+            <p><strong>Master:</strong> graf kjer sta razvidna datum in teža določene meritve.</p>
+            <p><strong>Detail:</strong> tooltip,  ki se prikaže, ko gremo z miško nad točko grafa.</p>
+            <p>Na njem je dodatno navedeno v katerem tromesečju je bila nosečnica v izbrani meritvi in razliko v teži (od začetka nosečnosti pa do izbrane meritve).</p>
             <!-- KONEC: Master/detail načrtovalski vzorec -->
           </div>
         </div>

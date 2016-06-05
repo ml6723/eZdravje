@@ -63,7 +63,7 @@ function generirajPodatke(stPacienta) {
       var naslov = "Bled";
       
       var meritve = {
-        datumMeritve: ["2015-08-11", "2015-10-06", "2015-12-20", "2016-02-15",
+        datumMeritve: ["2015-08-03", "2015-10-06", "2015-12-20", "2016-02-22",
             "2016-03-17", "2016-05-05"],
         visina: [165, 165, 165, 165, 165, 165],
         teza: [55.00, 55.00, 56.70, 61.50, 63.80, 65.30],
@@ -72,13 +72,13 @@ function generirajPodatke(stPacienta) {
         diastolicniTlak: [63, 65, 63, 69, 68, 80]
       }
   } else if(stPacienta == 3) {
-      var ime = "Aurora";
+      var ime = "Trnuljčica";
       var priimek = "Zaspana";
       var datumRojstva = "1697-10-21";
       var naslov = "Maribor";
       
       var meritve = {
-        datumMeritve: ["2016-01-31", "2016-03-15", "2016-04-05"],
+        datumMeritve: ["2016-01-31", "2016-03-11", "2016-04-15"],
         visina: [163, 163, 163],
         teza: [50.30, 50.60, 51.60],
         tromesecje: ["Pred nosečnostjo", "1. tromesečje", "1. tromesečje"],
@@ -112,9 +112,17 @@ function generirajPodatke(stPacienta) {
 		            data: JSON.stringify(partyData),
 		            success: function (party) {
 		                if (party.action == 'CREATE') {
-		                    $("#kreirajSporocilo").html("<span class='obvestilo " +
+		                   /*$("#kreirajSporocilo").html("<span class='obvestilo " +
                           "label label-success fade-in'>Uspešno kreiran EHR '" +
-                          ehrId + "' je dodan na konec seznama.</span>");
+                          ehrId + "' je dodan na konec seznama.</span>");*/
+                            
+                            var el = $("#podatkiONosecki");
+                            var opt = document.createElement('p');
+                            var text = "Kreiran je nov EHR " + ehrId;
+                            opt.textContent = text;
+                            el.append(opt);
+                            
+                          
 		                    $("#preberiEHRid").val(ehrId);
 		                    var element = $("#preberiObstojeciEHR");
 		                    var option = document.createElement('option');
@@ -151,11 +159,11 @@ function dodajMeritveVitalnihZnakov() {
     
     var izbranoTromesecje = $("input[name='izberiTromesecje']:checked").val();
     
-    var datum = $("#dodajVitalnoDatum").val();
-    var visina = $("#dodajVitalnoTelesnaVisina").val();
-    var teza = $("#dodajVitalnoTelesnaTeza").val();
-    var sistolicniTlak = $("#dodajVitalnoKrvniTlakSistolicni").val();
-    var diastolicniTlak = $("#dodajVitalnoKrvniTlakDiastolicni").val();
+    var datum = $("#dodajDatum").val();
+    var visina = $("#dodajVisina").val();
+    var teza = $("#dodajTeza").val();
+    var sistolicniTlak = $("#dodajTlakSistolicni").val();
+    var diastolicniTlak = $("#dodajTlakDiastolicni").val();
     
     
     if(ehrId == undefined) {
@@ -204,6 +212,25 @@ function dodajMeritve(ehrId, meritve, index) {
     		    "vital_signs/blood_pressure/any_event/systolic": meritve.sistolicniTlak,
     		    "vital_signs/blood_pressure/any_event/diastolic": meritve.diastolicniTlak
 		    };
+		    
+		    var parametriZahteve = {
+    		    ehrId: ehrId,
+    		    templateId: 'Vital Signs',
+    		    format: 'FLAT',
+    		    committer: "Nosečka"
+    		};
+    		
+    		
+    		var poizvedba = $.ajax({
+                    		    url: baseUrl + "/composition?" + $.param(parametriZahteve),
+                    		    type: 'POST',
+                    		    contentType: 'application/json',
+                    		    data: JSON.stringify(podatki),
+                    		    async: false
+            });
+            
+            preberiEHR();
+            
 		} else {
 			var podatki = {
     		    "ctx/language": "en",
@@ -215,37 +242,42 @@ function dodajMeritve(ehrId, meritve, index) {
     		    "vital_signs/blood_pressure/any_event/systolic": meritve.sistolicniTlak[index],
     		    "vital_signs/blood_pressure/any_event/diastolic": meritve.diastolicniTlak[index]
     		};
+    		
+    		
+    		var parametriZahteve = {
+    		    ehrId: ehrId,
+    		    templateId: 'Vital Signs',
+    		    format: 'FLAT',
+    		    committer: "Nosečka"
+    		};
+    		
+    		
+    		var poizvedba = $.ajax({
+                    		    url: baseUrl + "/composition?" + $.param(parametriZahteve),
+                    		    type: 'POST',
+                    		    contentType: 'application/json',
+                    		    data: JSON.stringify(podatki),
+                    		    async: false
+            });
 		}
 
 		//console.log(meritve.teza[index]);
 		
-		var parametriZahteve = {
-		    ehrId: ehrId,
-		    templateId: 'Vital Signs',
-		    format: 'FLAT',
-		    committer: "Nosečka"
-		};
 		
-		
-		var poizvedba = $.ajax({
-                		    url: baseUrl + "/composition?" + $.param(parametriZahteve),
-                		    type: 'POST',
-                		    contentType: 'application/json',
-                		    data: JSON.stringify(podatki),
-                		    async: false
-                		});
                 		
-        preberiEHRodBolnika();
+        //preberiEHR();
 		
 		console.log(poizvedba.responseText);
 		
 		
 }
 
-function preberiEHRodBolnika() {
+function preberiEHR() {
 	sessionId = getSessionId();
 
 	var ehrId = $("#preberiEHRid").val();
+	
+	$("#priporocilo").html("");
 
 	if (!ehrId || ehrId.trim().length == 0) {
 		$("#preberiSporocilo").html("<span class='obvestilo label label-warning " +
@@ -271,9 +303,9 @@ function preberiEHRodBolnika() {
 				    var kraj = party.address.address;
 				}
 				
-				$("#podatkiONosecki").html("<p class='text-left'>Ime in priimek: " + party.firstNames + " " + party.lastNames + "</p>" +
-				"<p class='text-left'>Datum rojstva: " + datumRojstva + "</p>" +
-				"<p class='text-left'>Kraj bivanja: " + kraj + "</p>");
+				$("#podatkiONosecki").html("<p class='text-left'><b>Ime in priimek:</b> " + party.firstNames + " " + party.lastNames + "</p>" +
+				"<p class='text-left'><b>Datum rojstva:</b> " + datumRojstva + "</p>" +
+				"<p class='text-left'><b>Kraj bivanja:</b> " + kraj + "</p>");
 				
 				var AQL =
 				    "select " +
@@ -288,7 +320,8 @@ function preberiEHRodBolnika() {
                     "OBSERVATION a_b[openEHR-EHR-OBSERVATION.body_weight.v1] or " + 
                     "OBSERVATION a_c[openEHR-EHR-OBSERVATION.blood_pressure.v1] or " + 
                     "OBSERVATION a_d[openEHR-EHR-OBSERVATION.heart_rate-pulse.v1]) " + 
-                    "offset 0 limit 100 ";
+                    "order by a_b/data[at0002]/events[at0003]/time/value asc " +
+                    "offset 0 limit 12 ";
 				
 				//console.log(AQL);
 				narisiGrafa(ehrId, AQL, kraj);
@@ -332,17 +365,35 @@ function narisiGrafa(ehrId, AQL, kraj) {
 	        
 	        for(var i=0; i<podatki.length; i++) {
 	            teze[i] = podatki[i].weight;
-	            tromesecja[i] = podatki[i].comment;
+	            if(podatki[i].comment == null) {
+	                tromesecja[i] = "Ni podatka o tromesečju."
+	            } else {
+	                tromesecja[i] = podatki[i].comment;
+	            }
+	            
 	            sistolicniTlaki[i] = podatki[i].systolic;
 	            diastolicniTlaki[i] = podatki[i].diastolic;
 	            
 	            if(i == podatki.length-1) {
 	                if((sistolicniTlaki[i] - sistolicniTlaki[0]) >= 30) {
 	                    isci = ["hospital"];
+	                    
+	                    $("#priporocilo").html("<p class='text-center'>Draga nosečka!</p>" + 
+	                        "<p class='text-center'>Na podlagi tvojih meritev smo ugotovili, da je tvoj krvni pritisk kar <b>precej povišan</b> glede na tvoj pritisk pred nosečnostjo.</p>" + 
+	                        "<p class='text-center'><b>Ne skrbi, sigurno ni nič resnega.</b></p>" + 
+	                        "<p class='text-center'>Vseeno ti priporočamo obisk pri zdravniku, da se prepričaš, da je vse vredu.</p>" + 
+	                        "<p class='text-center'>V primeru, da trenutno ne moreš k svojemu osebnemu zdravniku, smo ti na zemljevidu označili zdravstvene ustanove v tvoji okolici, kjer ti bodo z veseljem pomagali.</p>");
 	                } else if((sistolicniTlaki[i] - sistolicniTlaki[0]) >= 20) {
 	                    isci = ["park"];
+	                    $("#priporocilo").html("<p class='text-center'>Draga nosečka!</p>" + 
+	                        "<p class='text-center'>Na podlagi tvojih meritev smo ugotovili, da je tvoj krvni pritisk <b>rahlo povišan</b> glede na tvoj pritisk pred nosečnostjo.</p>" + 
+	                        "<p class='text-center'>Razlog za to je najverjetneje preveč stresa. Priporočamo ti, da si vzameš malo časa zase.</p>" +
+	                        "<p class='text-center'>Na zemljevidu smo ti označili parke v tvoji okolici, kjer lahko preživiš sproščujoče popoldne v družbi svoje najljubše knjige.</p>");
 	                } else {
 	                    isci = ["spa"];
+	                    $("#priporocilo").html("<p class='text-center'>Draga nosečka!</p>" + 
+	                        "<p class='text-center'>Na podlagi tvojih meritev smo ugotovili, da je tvoj krvni pritisk popolnoma <b>v mejah normale</b>.</p>" + 
+	                        "<p class='text-center'>Na zemljevidu smo ti označili razne wellnes centre v tvoji okolici, kjer si lahko privoščiš malce razvajanja.</p>");
 	                }
 	            }
 	            
@@ -382,6 +433,8 @@ function drawChart(tabela1, tabela2, tabela3, tabela4, kateriGraf) {
         dataTable.addColumn('number', "Teža");
         dataTable.addColumn({type: 'string', role: 'tooltip'});
         
+        console.log(datumi);
+        
         if(teze.length > 0) {
             for(var j=0; j<teze.length; j++) {
                 var tab = new Array(3);
@@ -394,11 +447,13 @@ function drawChart(tabela1, tabela2, tabela3, tabela4, kateriGraf) {
                 tab[1] = teze[j];
                 tab[2] = detail;
                 
+                
                 dataTable.addRow(tab);
             }
         } else {
              dataTable.addRows([['Ni podatkov za prikaz', { role: 'annotation' }, { role: 'annotation' }],]);
         }
+        
     
         var options = {
           title: 'Tvoja teža skozi nosečnost',
@@ -414,6 +469,8 @@ function drawChart(tabela1, tabela2, tabela3, tabela4, kateriGraf) {
         var diastolicniTlaki = tabela3;
         var tromesecja = tabela4;
         
+        console.log(datumi);
+        
         dataTable.addColumn('string', 'Datum');
         dataTable.addColumn('number', "Sistolični tlak");
         dataTable.addColumn({type: 'string', role: 'tooltip'});
@@ -423,17 +480,22 @@ function drawChart(tabela1, tabela2, tabela3, tabela4, kateriGraf) {
         if(datumi.length > 0) {
             for(var j=0; j<datumi.length; j++) {
                 var tab = new Array(5);
+                //sistolicniTlaki[j] = sistolicniTlaki[j].toFixed(2);
+                //diastolicniTlaki[j] = diastolicniTlaki[j].toFixed(2);
                 tab[0] = datumi[j];
                 tab[1] = sistolicniTlaki[j];
-                tab[2] = tromesecja[j] + "\nDatum: " + datumi[j] + "\nSistolični pritisk: " + sistolicniTlaki[j] + "\nDiastolični pritisk: " + diastolicniTlaki[j];
+                tab[2] = tromesecja[j] + "\nDatum: " + datumi[j] + "\nSistolični pritisk: " + sistolicniTlaki[j].toFixed(0) + "\nDiastolični pritisk: " + diastolicniTlaki[j].toFixed(0);
                 tab[3] = diastolicniTlaki[j];
                 tab[4] = tromesecja[j] + "\nDatum: " + datumi[j] + "\nSistolični pritisk: " + sistolicniTlaki[j] + "\nDiastolični pritisk: " + diastolicniTlaki[j];
+                
+                
                 
                 dataTable.addRow(tab);
             }
         } else {
             dataTable.addRows([['Ni podatkov za prikaz', { role: 'annotation' }, { role: 'annotation' }, { role: 'annotation' }, { role: 'annotation' }],]);
         }
+        
         
         var options = {
           title: 'Tvoj pritisk skozi nosečnost',
@@ -550,13 +612,14 @@ $(document).ready(function() {
     
     $("#generiraj").click(function() {
         $("#kreirajSporocilo").html("");
+        $("#podatkiONosecki").html("");
         generirajPodatke(1);
         generirajPodatke(2);
         generirajPodatke(3);
     });
     
     $("#dodajMeritveVitZnakov").click(function() {
-        preberiEHRodBolnika();
+        preberiEHR();
     })
     
     $("#preberiObstojeciEHR").on('change',function(){
