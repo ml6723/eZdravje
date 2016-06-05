@@ -229,6 +229,9 @@ function dodajMeritve(ehrId, meritve, index) {
                     		    async: false
             });
             
+            $("#dodajMeritveVitalnihZnakovSporocilo").html(
+            "<span class='obvestilo label label-success fade-in'>Meritev je bila uspešno vnešena.");
+            
             preberiEHR();
             
 		} else {
@@ -380,20 +383,20 @@ function narisiGrafa(ehrId, AQL, kraj) {
 	                    
 	                    $("#priporocilo").html("<p class='text-center'>Draga nosečka!</p>" + 
 	                        "<p class='text-center'>Na podlagi tvojih meritev smo ugotovili, da je tvoj krvni pritisk kar <b>precej povišan</b> glede na tvoj pritisk pred nosečnostjo.</p>" + 
-	                        "<p class='text-center'><b>Ne skrbi, sigurno ni nič resnega.</b></p>" + 
+	                        "<p class='text-center'><b>Ne skrbi, zagotovo ni nič resnega.</b></p>" + 
 	                        "<p class='text-center'>Vseeno ti priporočamo obisk pri zdravniku, da se prepričaš, da je vse vredu.</p>" + 
-	                        "<p class='text-center'>V primeru, da trenutno ne moreš k svojemu osebnemu zdravniku, smo ti na zemljevidu označili zdravstvene ustanove v tvoji okolici, kjer ti bodo z veseljem pomagali.</p>");
+	                        "<p class='text-center'>V primeru, da trenutno ne moreš k svojemu osebnemu zdravniku, smo ti na zemljevidu označili <b>zdravstvene ustanove v tvoji okolici</b>, kjer ti bodo z veseljem pomagali.</p>");
 	                } else if((sistolicniTlaki[i] - sistolicniTlaki[0]) >= 20) {
 	                    isci = ["park"];
 	                    $("#priporocilo").html("<p class='text-center'>Draga nosečka!</p>" + 
 	                        "<p class='text-center'>Na podlagi tvojih meritev smo ugotovili, da je tvoj krvni pritisk <b>rahlo povišan</b> glede na tvoj pritisk pred nosečnostjo.</p>" + 
 	                        "<p class='text-center'>Razlog za to je najverjetneje preveč stresa. Priporočamo ti, da si vzameš malo časa zase.</p>" +
-	                        "<p class='text-center'>Na zemljevidu smo ti označili parke v tvoji okolici, kjer lahko preživiš sproščujoče popoldne v družbi svoje najljubše knjige.</p>");
+	                        "<p class='text-center'>Na zemljevidu smo ti označili <b>parke v tvoji okolici</b>, kjer lahko preživiš sproščujoče popoldne v družbi svoje najljubše knjige.</p>");
 	                } else {
 	                    isci = ["spa"];
 	                    $("#priporocilo").html("<p class='text-center'>Draga nosečka!</p>" + 
 	                        "<p class='text-center'>Na podlagi tvojih meritev smo ugotovili, da je tvoj krvni pritisk popolnoma <b>v mejah normale</b>.</p>" + 
-	                        "<p class='text-center'>Na zemljevidu smo ti označili razne wellnes centre v tvoji okolici, kjer si lahko privoščiš malce razvajanja.</p>");
+	                        "<p class='text-center'>Na zemljevidu smo ti označili razne <b>wellness in spa centre v tvoji okolici</b>, kjer si lahko privoščiš malce razvajanja.</p>");
 	                }
 	            }
 	            
@@ -517,38 +520,13 @@ function initialize(mesto) {
     } else {
         var kraj = mesto;
     }
- //   var sirina, dolzina;
     
     var geocoder = new google.maps.Geocoder();
     
     geocoder.geocode( {'address' : kraj}, geocodeCallback);
- /*   
-    console.log(sirina + " in " + dolzina);
-    
-    var city = new google.maps.LatLng(sirina, dolzina);
-    
-    var mapProp = {
-      center:new google.maps.LatLng(51.508742, -0.120850),
-      zoom: 15,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    
-    var map = new google.maps.Map($("#googleMap")[0], mapProp);
-    
-    var request = {
-        location: city,
-        radius: 200,
-        types: ['hospital', 'health'] // this is where you set the map to get the hospitals and health related places
-    };
-    
-    infowindow = new google.maps.InfoWindow();
-    var service = new google.maps.places.PlacesService(map);
-    service.nearbySearch(request, callback);
-    */
-    
 }
 
-var map;// = new google.maps.Map($("#googleMap")[0], mapProp);
+var map;
 var infowindow = new google.maps.InfoWindow();
 
 function geocodeCallback(results, status) {
@@ -557,11 +535,9 @@ function geocodeCallback(results, status) {
     console.log(" statusq " + status);
         return;
     }
-    //if (status == google.maps.GeocoderStatus.OK) {
-        //map.setCenter(results[0].geometry.location);
-     var   sirina = results[0].geometry.location.lat();
-     var   dolzina = results[0].geometry.location.lng();
-   //}
+    
+    var   sirina = results[0].geometry.location.lat();
+    var   dolzina = results[0].geometry.location.lng();
     
     console.log(sirina + " in " + dolzina);
     var city = new google.maps.LatLng(sirina, dolzina);
@@ -577,7 +553,7 @@ function geocodeCallback(results, status) {
     var request = {
         location: city,
         radius: 5000,
-        types: isci // this is where you set the map to get the hospitals and health related places
+        types: isci //kaj naj oznaci na zemljevidu
     };
     
     var service = new google.maps.places.PlacesService(map);
